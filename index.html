@@ -94,10 +94,11 @@
                     const txtmin = ("0" + min).slice(-2);
                     const txtsec = ("0" + sec).slice(-2);
                     if(horloge.data('heure')=='12'){
-                        const amPM= hours%12
-                        if(amPM == 0)amPM=12;
-                        txtHour = ("0" + (hours%12)).slice(-2);
-                        numeric.html(txtHour + ":" + txtmin + ":" + txtsec)
+                        let amPMhour= hours%12;
+                        if(amPMhour == 0)amPMhour=12;
+                        const amPM=(hours>=12)? "PM" : "AM";
+                        txtHour = ("0" + amPMhour).slice(-2);
+                        numeric.html(txtHour + ":" + txtmin + ":" +txtsec+" "+amPM)
                     }else{
                         numeric.html(txtHour + ":" + txtmin + ":" + txtsec)
                     }
