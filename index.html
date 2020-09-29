@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <style>
+            .analogique{
+                position: relative;
+                width: 200px;
+                height: 200px;
+                background: #eee;
+                border-radius: 50%;
+            }
+            .analogique .hours{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 60px; 
+                height: 3px;
+                background: #111111;
+                transform-origin:bottom left;
+            }
+            .analogique .min{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 80px; 
+                height: 1px;
+                background: #333;
+                transform-origin:bottom left;
+            }
+            .analogique .sec{
+                position: absolute;
+                top: 50%;left: 50%;
+                width: 100px; 
+                height: 1px;
+                background: red;
+                transform-origin:bottom left;
+            }
+
+        </style>
+</head>
+
+<body>
+    <div>
+
+        <div class="horloge" data-heure="24" data-fuseau="2">
+            Heure de Bruxelle
+        </div>
+    </div>
+
+    <div>
+
+        <div class="horloge" data-heure="12" data-fuseau="1">
+            Heure de Londre
+        </div>
+    </div>
+
+    <div>
+        <div class="horloge" data-heure="12" data-fuseau="-4">
+            Heure de New-York
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $(".horloge").each(function () {
+
+                var horloge = $(this)
+                console.log(horloge.data('fuseau'));
+
+                const montre = function(){
+                    let myDate = new Date();
+                    myDate = myDate.getTime() + (horloge.data('fuseau') * 60 * 60 * 1000);
+                    myDate = new Date(myDate);
+
+                    const hours = myDate.getUTCHours()
+                    const min = myDate.getUTCMinutes()
+                    const sec = myDate.getUTCSeconds()
+
+                    // Affichage numérique
+
+                        //Divers méthode
+                        //const txtHour=(hour<10)? "0"+hour: hour;
+                        //const txtHour=("0"+hour).slice(-2);
+
+                    let txtHour = ("0" + hours).slice(-2);
+                    const txtmin = ("0" + min).slice(-2);
+                    const txtsec = ("0" + sec).slice(-2);
+                    if(horloge.data('heure')=='12'){
+                        const amPM= hours%12
+                        if(amPM == 0)amPM=12;
+                        txtHour = ("0" + (hours%12)).slice(-2);
+                        numeric.html(txtHour + ":" + txtmin + ":" + txtsec)
+                    }else{
+                        numeric.html(txtHour + ":" + txtmin + ":" + txtsec)
+                    }
+                   
+                        //numeric.html(myDate.getUTCHours()+":"+myDate.getUTCMinutes()+":"+myDate.getUTCSeconds())
+                        //console.log(myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getUTCSeconds())
+
+
+                    //Affichage Analogique
+                    const rotateSec =sec/60*360
+                    const rotateMin =min/60*360 + rotateSec/60
+                    const rotateHours=hours/12*360 + rotateMin/12
+                    analogic.find('.hours').css({
+                        'transform':"rotate("+(rotateHours-90)+"deg)"
+                    })
+                    analogic.find('.min').css({
+                        'transform':"rotate("+(rotateMin-90)+"deg)"
+                    })
+                    analogic.find('.sec').css({
+                        'transform':"rotate("+(rotateSec-90)+"deg)"
+                    })
+                }
+                
+                let interval = setInterval(montre, 1000);
+                const numeric = $('<div class="numeric"></div>')
+                const analogic = $('<div class="analogique"><div class="sec"></div><div class="min"></div><div class="hours"></div></div>')
+
+                horloge.append(numeric)
+                horloge.append(analogic)
+
+                montre();
+
+            });
+
+        });
+    </script>
+</body>
+
+</html>
